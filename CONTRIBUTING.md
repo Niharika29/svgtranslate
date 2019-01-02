@@ -42,12 +42,34 @@ cp .env.dist .env
 docker-compose up
 ```
 
-Now you should be able to view the tool at [http://localhost:8042/](http://localhost:8042/)
-If you need to change the port, edit `TOOLFORGE_DOCKER_PORT` in your `svgtranslate/.env` file.
+Now you should be able to view the tool at [http://localhost:8042/](http://localhost:8042/).
 
-To run Composer commands on the server, connect to the container:
+The usual commands you'll need are as follows:
 
-    docker exec -it -u dev svgtranslate_web bash
+1. If you change anything in `assets/` you'll need to rebuild the asset files
+   (running `npm install` before the first time doing this, if you haven't already):
+
+       docker-compose exec assets npm run assets
+
+   Or, to have it monitor the files for changes while you're working
+   (note the double-hyphens to to prevent the `watch` flag from being treated as an argument to `npm`):
+
+       docker-compose exec assets npm run assets -- --watch
+
+2. If you change `composer.json` or `packages.json`, you need to update:
+
+       docker-compose exec web composer update
+       docker-compose exec assets npm update
+
+3. To run linting and tests:
+
+       docker-compose exec web composer lint
+       docker-compose exec assets npm run lint
+       docker-compose exec web composer test
+
+You can get to a shell inside the container with the following:
+
+    docker-compose exec <service_name> bash
 
 ### Install manually
 
@@ -75,6 +97,7 @@ Run development web server:
 Run linting:
 
     composer lint
+    npm run lint
 
 Run tests:
 

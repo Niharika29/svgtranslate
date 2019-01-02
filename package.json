@@ -17,5 +17,9 @@
   "devDependencies": {
     "eslint": "5.13.0",
     "eslint-config-wikimedia": "0.10.1"
+  },
+  "scripts": {
+    "lint": "lessc --lint assets/*.less && eslint .",
+    "assets": "encore production"
   }
 }

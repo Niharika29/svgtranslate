@@ -3,23 +3,24 @@ language: php
 php:
   - '7.2'
 
-before_install:
-  - nvm install # Use node version as defined in .nvmrc, for deterministic webpack builds.
-  - sudo apt-get install -y librsvg2-bin
+services:
+  - docker
 
 install:
-  - travis_retry composer install
-  - travis_retry npm ci
+  - cp .env.dist .env
+  - docker-compose up --build -d
+  - docker-compose ps
 
 script:
   # Compile assets, and make sure nothing's changed in Git.
-  - node_modules/.bin/encore production
+  - travis_retry docker-compose exec assets npm run assets
   - git status
   - git status | grep "nothing to commit, working tree clean"
-  # Run linting.
-  - composer lint
+  # Run linting. The LESS and ESlint are run separately here because Composer requires PHP and so we can't run.
+  - docker-compose exec web composer lint
+  - docker-compose exec assets npm run lint
   # Run tests.
-  - composer test
+  - docker-compose exec web composer test
 
 after_success:
-  - travis_retry php vendor/bin/php-coveralls --coverage_clover=var/log/phpunit_clover.xml --json_path=var/coveralls-upload.json
+  - docker-compose exec web vendor/bin/php-coveralls --coverage_clover=var/log/phpunit_clover.xml --json_path=var/coveralls-upload.json
