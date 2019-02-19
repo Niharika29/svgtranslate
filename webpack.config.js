@@ -95,6 +95,7 @@
 			'./assets/InterfaceLangButton.js',
 			'./assets/LanguageDialog.js',
 			'./assets/SearchWidget.js',
+			'./assets/TranslationInputWidget.js',
 			'./assets/UlsTagMultiselectWidget.js'
 		] )
 

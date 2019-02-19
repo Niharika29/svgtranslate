@@ -5,7 +5,6 @@ namespace App\OOUI;
 
 use OOUI\FieldLayout;
 use OOUI\FieldsetLayout;
-use OOUI\TextInputWidget;
 
 class TranslationsFieldset extends FieldsetLayout
 {
@@ -57,7 +56,7 @@ class TranslationsFieldset extends FieldsetLayout
         if ('' === $sourceLabel) {
             return false;
         }
-        $inputWidget = new TextInputWidget([
+        $inputWidget = new TranslationInputWidget([
             'name' => $tspanId,
             'value' => $value,
             'data' => ['tspan-id' => $tspanId],
